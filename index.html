@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>3D Simple Dice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Reduced sizes to account for reflections taking up vertical space */
+            --dice-size: 64px;
+            --dice-half: 32px;
+        }
+
+        @media (min-width: 380px) {
+            :root {
+                --dice-size: 76px;
+                --dice-half: 38px;
+            }
+        }
+
+        @media (min-width: 640px) {
+            :root {
+                --dice-size: 100px;
+                --dice-half: 50px;
+            }
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+            color: #ffffff;
+            overflow: hidden;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: contain;
+            touch-action: manipulation;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .scene {
+            width: var(--dice-size);
+            height: var(--dice-size);
+            perspective: 1000px;
+            margin: 10px 4px 30px 4px; /* Reduced horizontal margin significantly */
+            -webkit-box-reflect: below 2px linear-gradient(transparent, rgba(255, 255, 255, 0.05) 40%, rgba(255, 255, 255, 0.15));
+            position: relative;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cube__face {
+            position: absolute;
+            width: var(--dice-size);
+            height: var(--dice-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            box-shadow: 
+                inset 0 0 15px rgba(0,0,0,0.15),
+                inset 0 2px 4px rgba(255,255,255,0.2),
+                0 1px 2px rgba(0,0,0,0.3);
+            backface-visibility: hidden;
+            border-width: 1px;
+        }
+
+        .face-1 { transform: rotateY(0deg) translateZ(var(--dice-half)); }
+        .face-2 { transform: rotateY(180deg) translateZ(var(--dice-half)); }
+        .face-3 { transform: rotateY(90deg) translateZ(var(--dice-half)); }
+        .face-4 { transform: rotateY(-90deg) translateZ(var(--dice-half)); }
+        .face-5 { transform: rotateX(90deg) translateZ(var(--dice-half)); }
+        .face-6 { transform: rotateX(-90deg) translateZ(var(--dice-half)); }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+        }
+
+        @media (min-width: 640px) {
+            .dot {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        .dots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            width: 75%;
+            height: 75%;
+        }
+
+        @keyframes cube-spin {
+            0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0); }
+            50% { transform: rotateX(180deg) rotateY(360deg) rotateZ(180deg) translateY(-15px); }
+            100% { transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg) translateY(0); }
+        }
+
+        .is-rolling {
+            animation: cube-spin 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+        }
+
+        .dice-shadow {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%) rotateX(90deg);
+            width: 80%;
+            height: 20%;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes shadow-pulse {
+            0%, 100% { transform: translateX(-50%) rotateX(90deg) scale(1); opacity: 0.6; }
+            50% { transform: translateX(-50%) rotateX(90deg) scale(0.7); opacity: 0.3; }
+        }
+
+        .is-rolling + .dice-shadow {
+            animation: shadow-pulse 0.5s ease-in-out infinite;
+        }
+
+        .btn-tap {
+            touch-action: manipulation;
+            user-select: none;
+        }
+        
+        .btn-tap:active {
+            transform: scale(0.92);
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
