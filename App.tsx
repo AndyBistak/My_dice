@@ -253,11 +253,26 @@ const App: React.FC = () => {
           )}
         </div>
         
+        {/* Restored Detailed History UI */}
         {history.length > 0 && (
-          <div className="flex gap-2 px-6 overflow-x-auto no-scrollbar justify-center w-full" onClick={e => e.stopPropagation()}>
-            {history.slice(0, 8).map((rollSet, i) => (
-              <div key={i} className="bg-white/5 rounded-lg p-2 flex flex-col items-center opacity-40">
-                <span className="text-[9px] font-black text-white/50">{rollSet.reduce((a,b)=>a+b,0)}</span>
+          <div 
+            className="flex gap-2 px-6 overflow-x-auto max-w-full justify-start sm:justify-center no-scrollbar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {history.slice(0, 12).map((rollSet, i) => (
+              <div 
+                key={i} 
+                className="bg-white/5 border border-white/5 rounded-xl p-2 flex flex-col items-center justify-center min-w-[42px] transition-all duration-700 flex-shrink-0"
+                style={{ opacity: Math.max(0.1, 1 - (i * 0.15)) }}
+              >
+                <div className="flex flex-wrap gap-0.5 justify-center max-w-[35px]">
+                  {rollSet.map((v, idx) => (
+                    <span key={idx} className="text-[7px] font-bold text-zinc-600">{v}</span>
+                  ))}
+                </div>
+                <div className="text-[9px] font-black text-white/30 border-t border-white/5 mt-1 pt-1 w-full text-center">
+                  {rollSet.reduce((a, b) => a + b, 0)}
+                </div>
               </div>
             ))}
           </div>
