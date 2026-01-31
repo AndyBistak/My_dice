@@ -1,14 +1,14 @@
 {
   "id": "com.simpledice.3d.roller",
-  "name": "3D Simple Dice Roller",
-  "short_name": "3D Dice",
-  "description": "Ultra-minimalist 3D dice roller with haptic feedback.",
+  "name": "3D Pro Dice Roller",
+  "short_name": "Pro Dice",
+  "description": "A high-performance 3D dice roller for tabletop gaming, board games, and random decisions.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#050505",
   "theme_color": "#050505",
   "orientation": "any",
-  "categories": ["utilities", "games"],
+  "categories": ["utilities", "games", "productivity"],
   "icons": [
     {
       "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23ffffff'/%3E%3Ccircle cx='256' cy='256' r='60' fill='%230f172a'/%3E%3C/svg%3E",
@@ -21,6 +21,27 @@
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Roll 1 Dice",
+      "url": "./index.html?dice=1",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect width='96' height='96' rx='20' fill='white'/%3E%3Ccircle cx='48' cy='48' r='10' fill='black'/%3E%3C/svg%3E", "sizes": "96x96" }]
+    },
+    {
+      "name": "Roll 2 Dice",
+      "url": "./index.html?dice=2",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect width='96' height='96' rx='20' fill='white'/%3E%3Ccircle cx='30' cy='30' r='8' fill='black'/%3E%3Ccircle cx='66' cy='66' r='8' fill='black'/%3E%3C/svg%3E", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1080' height='1920'%3E%3Crect width='1080' height='1920' fill='%23050505'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-family='sans-serif' font-size='60'%3E3D DICE PRO%3C/text%3E%3C/svg%3E",
+      "sizes": "1080x1920",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Homescreen in Dark Mode"
     }
   ]
 }

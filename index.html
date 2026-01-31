@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>3D Simple Dice</title>
+    <title>3D Pro Dice Roller</title>
     
-    <!-- PWA Meta Tags -->
+    <!-- PWA & Store Meta Tags -->
     <meta name="theme-color" content="#050505">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-title" content="Pro Dice">
+    
+    <!-- iOS Splash Screens -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%23ffffff'/%3E%3Ccircle cx='96' cy='96' r='24' fill='%230f172a'/%3E%3C/svg%3E">
+    
+    <link rel="manifest" href="manifest.json">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Increased base size for small portrait screens */
             --dice-size: 74px;
             --dice-half: 37px;
         }
 
         @media (min-width: 380px) {
             :root {
-                /* Increased size for medium portrait screens */
                 --dice-size: 90px;
                 --dice-half: 45px;
             }
@@ -31,13 +33,11 @@
 
         @media (min-width: 640px) {
             :root {
-                /* Increased size for larger screens/tablets */
                 --dice-size: 112px;
                 --dice-half: 56px;
             }
         }
 
-        /* Mobile Rotated / Landscape Adjustments - Kept strictly as requested */
         @media (max-height: 500px) and (orientation: landscape) {
             :root {
                 --dice-size: 52px;
@@ -61,7 +61,7 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+            background: #050505;
             color: #ffffff;
             overflow: hidden;
             margin: 0;
@@ -82,7 +82,7 @@
             width: var(--dice-size);
             height: var(--dice-size);
             perspective: 1000px;
-            margin: 10px 4px 30px 4px; /* Reduced horizontal margin significantly */
+            margin: 10px 4px 30px 4px;
             -webkit-box-reflect: below 2px linear-gradient(transparent, rgba(255, 255, 255, 0.05) 40%, rgba(255, 255, 255, 0.15));
             position: relative;
         }
@@ -126,17 +126,11 @@
         }
 
         @media (min-width: 380px) {
-            .dot {
-                width: 12px;
-                height: 12px;
-            }
+            .dot { width: 12px; height: 12px; }
         }
 
         @media (min-width: 640px) {
-            .dot {
-                width: 16px;
-                height: 16px;
-            }
+            .dot { width: 16px; height: 16px; }
         }
 
         .dots-grid {
@@ -156,28 +150,6 @@
 
         .is-rolling {
             animation: cube-spin 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-        }
-
-        .dice-shadow {
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%) rotateX(90deg);
-            width: 80%;
-            height: 20%;
-            background: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-        }
-
-        @keyframes shadow-pulse {
-            0%, 100% { transform: translateX(-50%) rotateX(90deg) scale(1); opacity: 0.6; }
-            50% { transform: translateX(-50%) rotateX(90deg) scale(0.7); opacity: 0.3; }
-        }
-
-        .is-rolling + .dice-shadow {
-            animation: shadow-pulse 0.5s ease-in-out infinite;
         }
 
         .btn-tap {
