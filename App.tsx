@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { DiceCube } from './components/DiceCube';
 
@@ -134,13 +133,13 @@ const App: React.FC = () => {
 
   return (
     <div 
-      className="flex flex-col items-center justify-between h-screen w-full select-none pt-4 pb-4 sm:pt-6 sm:pb-8 touch-none relative overflow-hidden" 
+      className="flex flex-col items-center justify-between h-screen w-full select-none pt-4 pb-4 sm:pt-6 sm:pb-8 landscape:pt-2 landscape:pb-2 touch-none relative overflow-hidden" 
       onClick={roll}
     >
       {/* Settings Button - Top Left Corner */}
       <button 
         onClick={(e) => { e.stopPropagation(); setShowSettings(true); }}
-        className="absolute left-4 top-4 sm:left-6 sm:top-6 z-30 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors btn-tap"
+        className="absolute left-4 top-4 sm:left-6 sm:top-6 landscape:left-4 landscape:top-2 z-30 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors btn-tap"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
@@ -201,11 +200,11 @@ const App: React.FC = () => {
 
       {/* Top Header Section */}
       <div 
-        className="flex-shrink-0 flex flex-col items-center gap-3 sm:gap-4 z-20 w-full px-6"
+        className="flex-shrink-0 flex flex-col items-center gap-3 sm:gap-4 landscape:gap-1 z-20 w-full px-6"
       >
         {/* Dice Count Selection */}
         <div 
-          className="flex flex-col items-center gap-4 bg-white/5 p-1.5 px-2 rounded-2xl border border-white/10"
+          className="flex flex-col items-center gap-4 bg-white/5 p-1.5 px-2 rounded-2xl border border-white/10 landscape:bg-transparent landscape:border-transparent"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex gap-1">
@@ -214,7 +213,7 @@ const App: React.FC = () => {
                 key={n}
                 onClick={() => changeDiceCount(n)}
                 className={`
-                  w-9 h-9 sm:w-11 sm:h-10 rounded-xl text-sm font-bold transition-all btn-tap flex items-center justify-center
+                  w-9 h-9 sm:w-11 sm:h-10 landscape:w-8 landscape:h-8 rounded-xl text-sm font-bold transition-all btn-tap flex items-center justify-center
                   ${diceCount === n 
                     ? 'bg-white text-black shadow-lg shadow-white/10' 
                     : 'text-zinc-500 hover:text-zinc-300'
@@ -228,7 +227,7 @@ const App: React.FC = () => {
         </div>
 
         {/* Status */}
-        <div className="flex items-center justify-center w-full min-h-[30px]">
+        <div className="flex items-center justify-center w-full min-h-[30px] landscape:min-h-0">
           <div className="text-zinc-500 font-bold tracking-[0.3em] uppercase text-[9px] sm:text-[10px] opacity-70">
             {isRolling ? 'Rolling...' : 'Tap to roll'}
           </div>
@@ -237,8 +236,7 @@ const App: React.FC = () => {
 
       {/* Central Dice Display Area */}
       <div className="flex-1 w-full flex items-center justify-center px-4 min-h-0 overflow-visible relative">
-        {/* Container with flex-wrap and max-width ensures exactly 3 dice per row */}
-        <div className="flex flex-wrap items-center justify-center gap-2 max-w-[calc(var(--dice-size)*3+40px)] overflow-visible">
+        <div className="flex flex-wrap items-center justify-center gap-2 max-w-[calc(var(--dice-size)*3+40px)] landscape:gap-1 overflow-visible">
           {values.map((v, i) => {
             return (
               <div 
@@ -253,17 +251,17 @@ const App: React.FC = () => {
       </div>
 
       {/* Bottom Result & History Section */}
-      <div className="flex-shrink-0 flex flex-col items-center w-full gap-4 sm:gap-6 bg-gradient-to-t from-[#050505] via-[#050505] to-transparent pt-4 pb-4 sm:pb-8">
+      <div className="flex-shrink-0 flex flex-col items-center w-full gap-4 sm:gap-6 landscape:gap-1 bg-gradient-to-t from-[#050505] via-[#050505] to-transparent pt-4 pb-4 sm:pb-8 landscape:pt-0 landscape:pb-2">
         
         {/* Result Indicator */}
-        <div className="flex flex-col items-center justify-center h-16 sm:h-24">
+        <div className="flex flex-col items-center justify-center h-16 sm:h-24 landscape:h-10">
           {!isRolling ? (
             <div className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-500">
-              <div className="text-5xl sm:text-7xl font-black text-white/40 pointer-events-none leading-none tracking-tighter">
+              <div className="text-5xl sm:text-7xl landscape:text-3xl font-black text-white/40 pointer-events-none leading-none tracking-tighter">
                 {total}
               </div>
               {diceCount > 1 && (
-                <div className="text-[8px] sm:text-[9px] text-zinc-600 font-extrabold tracking-[0.4em] uppercase mt-1">
+                <div className="text-[8px] sm:text-[9px] text-zinc-600 font-extrabold tracking-[0.4em] uppercase mt-1 landscape:mt-0 landscape:text-[7px]">
                   Total Sum
                 </div>
               )}
@@ -274,31 +272,31 @@ const App: React.FC = () => {
         </div>
 
         {/* History & Footer */}
-        <div className="flex flex-col items-center gap-4 w-full">
+        <div className="flex flex-col items-center gap-4 landscape:gap-1 w-full">
           {history.length > 0 && (
             <div 
-              className="flex gap-2 px-6 overflow-x-auto max-w-full justify-start sm:justify-center no-scrollbar"
+              className="flex gap-2 px-6 overflow-x-auto max-w-full justify-start sm:justify-center no-scrollbar landscape:gap-1"
               onClick={(e) => e.stopPropagation()}
             >
               {history.slice(0, 12).map((rollSet, i) => (
                 <div 
                   key={i} 
-                  className="bg-white/5 border border-white/5 rounded-xl p-2 flex flex-col items-center justify-center min-w-[42px] transition-all duration-700 flex-shrink-0"
+                  className="bg-white/5 border border-white/5 rounded-xl p-2 landscape:p-1 flex flex-col items-center justify-center min-w-[42px] landscape:min-w-[32px] transition-all duration-700 flex-shrink-0"
                   style={{ opacity: Math.max(0.1, 1 - (i * 0.15)) }}
                 >
-                  <div className="flex flex-wrap gap-0.5 justify-center max-w-[35px]">
+                  <div className="flex flex-wrap gap-0.5 justify-center max-w-[35px] landscape:max-w-[25px]">
                     {rollSet.map((v, idx) => (
-                      <span key={idx} className="text-[7px] font-bold text-zinc-600">{v}</span>
+                      <span key={idx} className="text-[7px] landscape:text-[6px] font-bold text-zinc-600">{v}</span>
                     ))}
                   </div>
-                  <div className="text-[9px] font-black text-white/30 border-t border-white/5 mt-1 pt-1 w-full text-center">
+                  <div className="text-[9px] landscape:text-[7px] font-black text-white/30 border-t border-white/5 mt-1 pt-1 w-full text-center">
                     {rollSet.reduce((a, b) => a + b, 0)}
                   </div>
                 </div>
               ))}
             </div>
           )}
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 landscape:hidden">
             <div className="text-[8px] text-zinc-800 font-bold tracking-[0.3em] uppercase">
               Shake to roll enabled
             </div>
