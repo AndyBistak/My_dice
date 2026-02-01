@@ -14,6 +14,11 @@ interface Palette {
   dot: string;
 }
 
+interface BgOption {
+  name: string;
+  color: string;
+}
+
 const palettes: Palette[] = [
   { name: 'Panda', face: '#ffffff', dot: '#0f172a' },
   { name: 'Slate', face: '#334155', dot: '#f8fafc' },
@@ -29,10 +34,26 @@ const palettes: Palette[] = [
   { name: 'Cream', face: '#fef3c7', dot: '#92400e' },
 ];
 
+const bgOptions: BgOption[] = [
+  { name: 'Paper', color: '#FFFFFF' },
+  { name: 'Shell', color: '#F8FAFC' },
+  { name: 'Bone', color: '#FEFCE8' },
+  { name: 'Mint', color: '#F0FDF4' },
+  { name: 'Ice', color: '#F0F9FF' },
+  { name: 'Clay', color: '#78716C' },
+  { name: 'Forest', color: '#064E3B' },
+  { name: 'Maroon', color: '#450A0A' },
+  { name: 'Denim', color: '#1E3A8A' },
+  { name: 'Space', color: '#0F172A' },
+  { name: 'Basalt', color: '#0C0A09' },
+  { name: 'Void', color: '#000000' },
+];
+
 const App: React.FC = () => {
   const [diceCount, setDiceCount] = useState<number>(1);
   const [values, setValues] = useState<number[]>([1]);
   const [activePalette, setActivePalette] = useState<Palette>(palettes[0]);
+  const [appBgColor, setAppBgColor] = useState<string>(bgOptions[bgOptions.length - 1].color);
   const [isRolling, setIsRolling] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showDeployInfo, setShowDeployInfo] = useState(false);
@@ -74,6 +95,20 @@ const App: React.FC = () => {
     dot: activePalette.dot,
     border: activePalette.face === '#ffffff' ? '#e2e8f0' : 'rgba(0,0,0,0.1)'
   }), [activePalette]);
+
+  // Derived luminance check to adjust UI contrast
+  const isLightBg = useMemo(() => {
+    const hex = appBgColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5;
+  }, [appBgColor]);
+
+  const textColorClass = isLightBg ? 'text-zinc-900' : 'text-white';
+  const subTextColorClass = isLightBg ? 'text-zinc-500' : 'text-zinc-400';
+  const shadowOverlayClass = isLightBg ? 'bg-black/10' : 'bg-white/5';
 
   const roll = useCallback(() => {
     if (isRollingRef.current || showSettings || showPrivacy) return;
@@ -134,12 +169,16 @@ const App: React.FC = () => {
   const total = values.reduce((a, b) => a + b, 0);
 
   return (
-    <div className="flex flex-col items-center justify-between h-screen w-full select-none pt-4 pb-4 sm:pt-6 sm:pb-8 landscape:pt-2 landscape:pb-2 touch-none relative overflow-hidden" onClick={roll}>
+    <div 
+      className="flex flex-col items-center justify-between h-screen w-full select-none pt-4 pb-4 sm:pt-6 sm:pb-8 landscape:pt-2 landscape:pb-2 touch-none relative overflow-hidden transition-colors duration-700 ease-in-out" 
+      onClick={roll}
+      style={{ backgroundColor: appBgColor }}
+    >
       
       {/* Settings Button */}
       <button 
         onClick={(e) => { e.stopPropagation(); setShowSettings(true); }}
-        className="absolute left-4 top-4 z-30 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors btn-tap"
+        className={`absolute left-4 top-4 z-30 w-10 h-10 rounded-full border flex items-center justify-center transition-colors btn-tap ${isLightBg ? 'bg-black/5 border-black/10 text-zinc-600' : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'}`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
@@ -147,7 +186,7 @@ const App: React.FC = () => {
       {/* Settings Modal */}
       {showSettings && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-2xl flex items-center justify-center p-6 animate-in fade-in" onClick={() => setShowSettings(false)}>
-          <div className="bg-zinc-900/90 border border-white/10 p-8 rounded-[2.5rem] w-full max-w-sm flex flex-col gap-6" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-zinc-900/90 border border-white/10 p-8 rounded-[2.5rem] w-full max-w-sm flex flex-col gap-6 no-scrollbar overflow-y-auto max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
             {showDeployInfo ? (
               <div className="flex flex-col gap-4">
                 <h3 className="text-white font-black text-center uppercase tracking-widest text-xs">Submission Roadmap</h3>
@@ -171,19 +210,37 @@ const App: React.FC = () => {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-4 gap-4">
-                  {palettes.map((p) => (
-                    <button key={p.name} onClick={() => setActivePalette(p)} className="flex flex-col items-center gap-1">
-                      <div style={{ backgroundColor: p.face }} className={`w-10 h-10 rounded-full border-2 transition-all ${activePalette.name === p.name ? 'border-white scale-110' : 'border-transparent opacity-40'}`} />
-                      <span className="text-[8px] font-bold text-zinc-500">{p.name}</span>
-                    </button>
-                  ))}
+                <div className="space-y-6">
+                  <section>
+                    <h4 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-4">Dice Theme</h4>
+                    <div className="grid grid-cols-4 gap-4">
+                      {palettes.map((p) => (
+                        <button key={p.name} onClick={() => setActivePalette(p)} className="flex flex-col items-center gap-1">
+                          <div style={{ backgroundColor: p.face }} className={`w-10 h-10 rounded-full border-2 transition-all ${activePalette.name === p.name ? 'border-white scale-110 shadow-lg shadow-white/20' : 'border-transparent opacity-40 hover:opacity-100'}`} />
+                          <span className="text-[8px] font-bold text-zinc-500">{p.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section>
+                    <h4 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-4">UI Background</h4>
+                    <div className="grid grid-cols-4 gap-4">
+                      {bgOptions.map((bg) => (
+                        <button key={bg.name} onClick={() => setAppBgColor(bg.color)} className="flex flex-col items-center gap-1">
+                          <div style={{ backgroundColor: bg.color }} className={`w-10 h-10 rounded-full border-2 transition-all ${appBgColor === bg.color ? 'border-white scale-110 shadow-lg shadow-white/20' : 'border-white/10 opacity-40 hover:opacity-100'}`} />
+                          <span className="text-[8px] font-bold text-zinc-500">{bg.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
                 </div>
+
                 <div className="flex flex-col gap-2 mt-4">
                   <button onClick={() => setShowDeployInfo(true)} className="w-full py-3 rounded-2xl bg-white/5 border border-white/10 text-white text-[9px] font-black uppercase tracking-widest">Store Submission Info</button>
                   <button onClick={() => setShowPrivacy(true)} className="w-full py-3 rounded-2xl text-zinc-500 text-[9px] font-bold uppercase tracking-widest">Privacy Policy</button>
                 </div>
-                <button onClick={() => setShowSettings(false)} className="w-full bg-white text-black font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest">Close</button>
+                <button onClick={() => setShowSettings(false)} className="w-full bg-white text-black font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest shadow-xl shadow-black/20">Close</button>
               </>
             )}
           </div>
@@ -225,12 +282,18 @@ const App: React.FC = () => {
             Add to Home Screen
           </button>
         )}
-        <div className="flex gap-1 bg-white/5 p-1 rounded-2xl border border-white/10" onClick={e => e.stopPropagation()}>
+        <div className={`flex gap-1 p-1 rounded-2xl border backdrop-blur-md transition-colors ${isLightBg ? 'bg-black/5 border-black/10' : 'bg-white/5 border-white/10'}`} onClick={e => e.stopPropagation()}>
           {[1, 2, 3, 4, 5, 6].map(n => (
-            <button key={n} onClick={() => changeDiceCount(n)} className={`w-9 h-9 rounded-xl text-sm font-bold transition-all ${diceCount === n ? 'bg-white text-black' : 'text-zinc-500'}`}>{n}</button>
+            <button 
+              key={n} 
+              onClick={() => changeDiceCount(n)} 
+              className={`w-9 h-9 rounded-xl text-sm font-bold transition-all ${diceCount === n ? (isLightBg ? 'bg-zinc-800 text-white shadow-md' : 'bg-white text-black shadow-md') : (isLightBg ? 'text-zinc-600 hover:text-zinc-900' : 'text-zinc-500 hover:text-zinc-300')}`}
+            >
+              {n}
+            </button>
           ))}
         </div>
-        <div className="text-zinc-500 font-bold tracking-[0.3em] uppercase text-[9px] opacity-70">
+        <div className={`${subTextColorClass} font-bold tracking-[0.3em] uppercase text-[9px] opacity-70`}>
           {isRolling ? 'Rolling...' : 'Tap or Shake to roll'}
         </div>
       </div>
@@ -243,12 +306,18 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex-shrink-0 flex flex-col items-center w-full gap-4 pb-8">
-        <div className="h-20 flex flex-col items-center justify-center">
+      <div className="flex-shrink-0 flex flex-col items-center w-full gap-4 pb-8 relative">
+        {/* Subtle shadow gradient overlay to ground the summary */}
+        <div 
+          className="absolute inset-x-0 bottom-0 h-48 pointer-events-none transition-all duration-700" 
+          style={{ backgroundImage: `linear-gradient(to top, ${appBgColor} 0%, transparent 100%)` }}
+        />
+        
+        <div className="h-20 flex flex-col items-center justify-center relative z-10">
           {!isRolling && (
             <div className="animate-in fade-in slide-in-from-bottom-2 flex flex-col items-center">
-              <span className="text-6xl font-black text-white/50">{total}</span>
-              {diceCount > 1 && <span className="text-[8px] text-zinc-600 font-black uppercase tracking-widest">Total Sum</span>}
+              <span className={`text-6xl font-black transition-colors ${isLightBg ? 'text-zinc-900/60' : 'text-white/50'}`}>{total}</span>
+              {diceCount > 1 && <span className={`text-[8px] font-black uppercase tracking-widest transition-colors ${isLightBg ? 'text-zinc-500' : 'text-zinc-600'}`}>Total Sum</span>}
             </div>
           )}
         </div>
@@ -256,21 +325,21 @@ const App: React.FC = () => {
         {/* Restored Detailed History UI */}
         {history.length > 0 && (
           <div 
-            className="flex gap-2 px-6 overflow-x-auto max-w-full justify-start sm:justify-center no-scrollbar"
+            className="flex gap-2 px-6 overflow-x-auto max-w-full justify-start sm:justify-center no-scrollbar relative z-10"
             onClick={(e) => e.stopPropagation()}
           >
             {history.slice(0, 12).map((rollSet, i) => (
               <div 
                 key={i} 
-                className="bg-white/5 border border-white/5 rounded-xl p-2 flex flex-col items-center justify-center min-w-[42px] transition-all duration-700 flex-shrink-0"
+                className={`border rounded-xl p-2 flex flex-col items-center justify-center min-w-[42px] transition-all duration-700 flex-shrink-0 ${shadowOverlayClass} ${isLightBg ? 'border-black/5' : 'border-white/5'}`}
                 style={{ opacity: Math.max(0.1, 1 - (i * 0.15)) }}
               >
                 <div className="flex flex-wrap gap-0.5 justify-center max-w-[35px]">
                   {rollSet.map((v, idx) => (
-                    <span key={idx} className="text-[7px] font-bold text-zinc-600">{v}</span>
+                    <span key={idx} className={`text-[7px] font-bold ${isLightBg ? 'text-zinc-500' : 'text-zinc-600'}`}>{v}</span>
                   ))}
                 </div>
-                <div className="text-[9px] font-black text-white/30 border-t border-white/5 mt-1 pt-1 w-full text-center">
+                <div className={`text-[9px] font-black border-t mt-1 pt-1 w-full text-center transition-colors ${isLightBg ? 'text-black/30 border-black/5' : 'text-white/30 border-white/5'}`}>
                   {rollSet.reduce((a, b) => a + b, 0)}
                 </div>
               </div>
